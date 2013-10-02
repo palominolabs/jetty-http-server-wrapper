@@ -16,7 +16,7 @@ public class HttpServerWrapperFactory {
         this.filter = filter;
     }
 
-    public HttpServerWrapper getHttpServer(HttpServerWrapperConfig config) {
+    public HttpServerWrapper getHttpServerWrapper(HttpServerWrapperConfig config) {
         return new HttpServerWrapper(config, filter);
     }
 

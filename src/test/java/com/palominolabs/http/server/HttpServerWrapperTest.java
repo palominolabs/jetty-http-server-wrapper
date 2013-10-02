@@ -130,7 +130,7 @@ public final class HttpServerWrapperTest {
             }
         });
 
-        return injector.getInstance(HttpServerWrapperFactory.class).getHttpServer(config);
+        return injector.getInstance(HttpServerWrapperFactory.class).getHttpServerWrapper(config);
     }
 
     private static HttpServerWrapperConfig getDefaultConfig() throws KeyStoreException, CertificateException,
