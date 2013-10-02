@@ -34,7 +34,7 @@ injector.getInstance(HttpServerWrapperFactory.class)
 # What's In The Box
 There are four main classes you'll interact with.
 
-## [`HttpServerConnectorConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerConnectorConfig.java)
+### [`HttpServerConnectorConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerConnectorConfig.java)
 This class represents one individual connector. A server can have many connectors listening on different ports and with or without TLS.
 
 To make a connector for plain HTTP:
@@ -59,7 +59,7 @@ You can use fluent-style `.with*` methods that return the current config object 
 Be
 You may also specify the TLS cipher suites and TLS protocols to use, but the defaults are sane, so typically you can just leave them alone.
 
-## [`HttpServerWrapperConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapperConfig.java)
+### [`HttpServerWrapperConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapperConfig.java)
 This class represents config that is scoped at the server level, not the connector level.
 
 For basic usage all you need to do is add a connector:
@@ -84,11 +84,11 @@ config.withMaxFormContentSize(400000)
 
 Like `HttpServerConnectorConfig`, you can use `.with*` methods or `.set*` methods to set parameters.
 
-## [`HttpServerWrapperFactory`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapperFactory.java)
+### [`HttpServerWrapperFactory`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapperFactory.java)
 
 This is what you inject into your own code to use with a `HttpServerWrapperConfig` to create a `HttpServerWrapper`.
 
-## [`HttpServerWrapper`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapper.java)
+### [`HttpServerWrapper`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapper.java)
 
 When you get a `HttpServerWrapper` instance from a `HttpServerWrapperFactory`, it contains a configured but not yet started Jetty server.
 
