@@ -31,6 +31,8 @@ injector.getInstance(HttpServerWrapperFactory.class)
 // you now have a server listening on localhost:8080
 ```
 
+Requests that do not match any configured pattern for GuiceFilter (in this case, the `/somewhere` pattern configured in the ServletModule) will end up at a simple servlet that just returns an HTTP 404.
+
 # What's In The Box
 There are four main classes you'll interact with.
 
