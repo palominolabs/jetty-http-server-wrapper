@@ -15,7 +15,7 @@ final class ConfigUris {
     }
 
     /**
-     * @param uri a classpath:// or file:// uri
+     * @param uri a classpath:/ or file:/ uri
      * @return a url
      * @throws IllegalArgumentException if the uri has a scheme other than classpath or file, or if the uri is
      *                                  malformed, or if the uri points to a classpath resource that can't be found
@@ -43,5 +43,4 @@ final class ConfigUris {
 
         throw new IllegalArgumentException("Unknown scheme: <" + uri + ">");
     }
-
 }
