@@ -41,10 +41,6 @@ To make a connector for plain HTTP:
 ```
 HttpServerConnectorConfig.forHttp("localhost", 8080)
 ```
-and for HTTP with TLS:
-```
-HttpServerConnectorConfig.forHttps("localhost", 8443)
-```
 
 For a plain HTTP connector, there's nothing further to configure.
 
@@ -56,7 +52,7 @@ HttpServerConnectorConfig.forHttps("localhost", 8443)
 ```
 
 You can use fluent-style `.with*` methods that return the current config object after modification, or plain old setters.
-Be
+
 You may also specify the TLS cipher suites and TLS protocols to use, but the defaults are sane, so typically you can just leave them alone.
 
 ### [`HttpServerWrapperConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapperConfig.java)
