@@ -4,6 +4,8 @@
 
 package com.palominolabs.http.server;
 
+import org.eclipse.jetty.server.handler.ContextHandler;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -73,6 +75,7 @@ public final class HttpServerWrapperConfig {
      * Default is -1 (which means that it will be ignored and the server default, currently 200k, will be used)
      *
      * @param maxFormContentSize content size in bytes, -1 to use Jetty default
+     * @see ContextHandler#setMaxFormContentSize(int)
      */
     public void setMaxFormContentSize(int maxFormContentSize) {
         this.maxFormContentSize = maxFormContentSize;
@@ -117,7 +120,8 @@ public final class HttpServerWrapperConfig {
      * @see HttpServerWrapperConfig#setAccessLogConfigFileInFilesystem(String)
      */
     @Nonnull
-    public HttpServerWrapperConfig withAccessLogConfigFileInFilesystem(@Nullable String accessLogConfigFileInFilesystem) {
+    public HttpServerWrapperConfig withAccessLogConfigFileInFilesystem(
+        @Nullable String accessLogConfigFileInFilesystem) {
         setAccessLogConfigFileInFilesystem(accessLogConfigFileInFilesystem);
         return this;
     }

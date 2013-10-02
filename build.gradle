@@ -12,13 +12,13 @@ targetCompatibility = JavaVersion.VERSION_1_7
 ext {
   depVersions = [
       slf4j: '1.7.5',
+      guice: '3.0'
   ]
 }
 
 dependencies {
   compile 'com.google.code.findbugs:jsr305:2.0.1'
-//  compile 'com.google.guava:guava:15.0'
-//  compile 'org.apache.commons:commons-lang3:3.1'
+  compile 'com.google.guava:guava:15.0'
   compile 'com.palominolabs.config:config-inject:1.0.0'
 
   compile "org.slf4j:slf4j-api:$depVersions.slf4j"
@@ -28,7 +28,8 @@ dependencies {
   testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
 
   compile 'org.eclipse.jetty:jetty-servlet:9.0.5.v20130815'
-  compile 'com.google.inject.extensions:guice-servlet:3.0'
+  compile "com.google.inject.extensions:guice-servlet:$depVersions.guice"
+  compile "com.google.inject.extensions:guice-assistedinject:$depVersions.guice"
   compile 'ch.qos.logback:logback-access:1.0.13'
 
   testCompile 'org.apache.httpcomponents:httpclient:4.3'

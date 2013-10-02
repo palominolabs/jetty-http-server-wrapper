@@ -5,6 +5,7 @@
 package com.palominolabs.http.server;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.servlet.GuiceFilter;
 
 /**
@@ -14,6 +15,8 @@ public class HttpServerWrapperModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(GuiceFilter.class);
-        bind(HttpServerWrapperFactory.class);
+        install(new FactoryModuleBuilder()
+            .implement(HttpServerWrapper.class, HttpServerWrapper.class)
+            .build(HttpServerWrapperFactory.class));
     }
 }

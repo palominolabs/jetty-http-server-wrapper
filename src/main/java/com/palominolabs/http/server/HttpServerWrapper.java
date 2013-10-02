@@ -5,6 +5,8 @@
 package com.palominolabs.http.server;
 
 import ch.qos.logback.access.jetty.RequestLogImpl;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -33,7 +35,8 @@ public class HttpServerWrapper {
     private final GuiceFilter filter;
     private final Server server = new Server();
 
-    HttpServerWrapper(HttpServerWrapperConfig httpServerWrapperConfig, GuiceFilter filter) {
+    @Inject
+    HttpServerWrapper(@Assisted HttpServerWrapperConfig httpServerWrapperConfig, GuiceFilter filter) {
         this.httpServerWrapperConfig = httpServerWrapperConfig;
         this.filter = filter;
     }

@@ -4,20 +4,10 @@
 
 package com.palominolabs.http.server;
 
-import com.google.inject.Inject;
-import com.google.inject.servlet.GuiceFilter;
+import javax.annotation.Nonnull;
 
-public class HttpServerWrapperFactory {
+public interface HttpServerWrapperFactory {
 
-    private final GuiceFilter filter;
-
-    @Inject
-    HttpServerWrapperFactory(GuiceFilter filter) {
-        this.filter = filter;
-    }
-
-    public HttpServerWrapper getHttpServerWrapper(HttpServerWrapperConfig config) {
-        return new HttpServerWrapper(config, filter);
-    }
-
+    @Nonnull
+    public HttpServerWrapper getHttpServerWrapper(@Nonnull HttpServerWrapperConfig config);
 }
