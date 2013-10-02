@@ -5,7 +5,6 @@
 package com.palominolabs.http.server;
 
 import ch.qos.logback.access.jetty.RequestLogImpl;
-import com.google.common.base.Preconditions;
 import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -20,9 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.servlet.DispatcherType;
-import java.io.InputStream;
-import java.net.URL;
-import java.security.KeyStore;
 import java.util.EnumSet;
 
 /**
@@ -66,38 +62,40 @@ public class HttpServerWrapper {
             logger.debug("Setting logback access config fs path to " +
                 httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
             logbackRequestLog.setFileName(httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
+            logHandler.setRequestLog(logbackRequestLog);
+            handlerCollection.addHandler(logHandler);
         } else if (httpServerWrapperConfig.getAccessLogConfigFileInClasspath() != null) {
             logger.debug("Loading logback access config from classpath path " + httpServerWrapperConfig
                 .getAccessLogConfigFileInClasspath());
             logbackRequestLog.setResource(httpServerWrapperConfig.getAccessLogConfigFileInClasspath());
+            logHandler.setRequestLog(logbackRequestLog);
+            handlerCollection.addHandler(logHandler);
         } else {
-            logger.warn("No access logging configured!");
+            logger.info("No access logging configured.");
         }
-        logHandler.setRequestLog(logbackRequestLog);
-        handlerCollection.addHandler(logHandler);
 
         server.setHandler(handlerCollection);
 
-        for (HttpServerListenerConfig listenerConfig : httpServerWrapperConfig.getHttpServerListeners()) {
-            if (listenerConfig.isTls()) {
+        for (HttpServerConnectorConfig connectorConfig : httpServerWrapperConfig.getHttpServerConnectorConfigs()) {
+            if (connectorConfig.isTls()) {
 
                 SslContextFactory sslContextFactory = new SslContextFactory();
-                sslContextFactory.setKeyStore(listenerConfig.getTlsKeystore());
-                sslContextFactory.setKeyStorePassword(listenerConfig.getTlsKeystorePassphrase());
+                sslContextFactory.setKeyStore(connectorConfig.getTlsKeystore());
+                sslContextFactory.setKeyStorePassword(connectorConfig.getTlsKeystorePassphrase());
 
-                sslContextFactory.setIncludeCipherSuites(listenerConfig.getTlsCipherSuites()
-                    .toArray(new String[listenerConfig.getTlsCipherSuites().size()]));
+                sslContextFactory.setIncludeCipherSuites(connectorConfig.getTlsCipherSuites()
+                    .toArray(new String[connectorConfig.getTlsCipherSuites().size()]));
                 sslContextFactory.setIncludeProtocols(
-                    listenerConfig.getTlsProtocols().toArray(new String[listenerConfig.getTlsProtocols().size()]));
+                    connectorConfig.getTlsProtocols().toArray(new String[connectorConfig.getTlsProtocols().size()]));
 
                 ServerConnector connector = new ServerConnector(server, sslContextFactory);
-                connector.setPort(listenerConfig.getListenPort());
-                connector.setHost(listenerConfig.getListenHost());
+                connector.setPort(connectorConfig.getListenPort());
+                connector.setHost(connectorConfig.getListenHost());
                 server.addConnector(connector);
             } else {
                 ServerConnector connector = new ServerConnector(server);
-                connector.setPort(listenerConfig.getListenPort());
-                connector.setHost(listenerConfig.getListenHost());
+                connector.setPort(connectorConfig.getListenPort());
+                connector.setHost(connectorConfig.getListenHost());
                 server.addConnector(connector);
             }
         }

@@ -135,22 +135,20 @@ public final class HttpServerWrapperTest {
 
     private static HttpServerWrapperConfig getDefaultConfig() throws KeyStoreException, CertificateException,
         NoSuchAlgorithmException, IOException {
-        HttpServerWrapperConfig config = new HttpServerWrapperConfig();
 
-        config.addHttpServerListenerConfig(HttpServerListenerConfig.forHttp("localhost", 8080));
-        HttpServerListenerConfig httpsConfig = HttpServerListenerConfig.forHttps("localhost", 8443);
 
         InputStream stream = HttpServerWrapperTest.class.getResourceAsStream("/cert-and-key.p12");
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(stream, "password".toCharArray());
 
-        httpsConfig.setTlsKeystore(keyStore);
-        httpsConfig.setTlsKeystorePassphrase("password");
+        HttpServerConnectorConfig httpsConfig = HttpServerConnectorConfig.forHttps("localhost", 8443)
+            .withTlsKeystore(keyStore)
+            .withTlsKeystorePassphrase("password");
 
-        config.addHttpServerListenerConfig(httpsConfig);
-
-        config.setAccessLogConfigFileInClasspath("/logback-access-test.xml");
-        return config;
+        return new HttpServerWrapperConfig()
+            .withAccessLogConfigFileInClasspath("/logback-access-test.xml")
+            .withHttpServerConnectorConfig(httpsConfig)
+            .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", 8080));
     }
 
     @Singleton

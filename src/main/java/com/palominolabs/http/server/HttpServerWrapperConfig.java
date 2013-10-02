@@ -4,39 +4,63 @@
 
 package com.palominolabs.http.server;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
- * A simple bean to hold config info.
+ * Config info for {@link HttpServerWrapper}.
  */
 @NotThreadSafe
 public final class HttpServerWrapperConfig {
 
-    private final List<HttpServerListenerConfig> listenerConfigs = newArrayList();
+    private final List<HttpServerConnectorConfig> connectorConfigs = newArrayList();
 
     private int maxFormContentSize = -1;
 
+    @Nullable
     private String accessLogConfigFileInClasspath = "/" + this.getClass().getPackage()
         .getName().replace('.', '/') + "/pl-default-logback-access.xml";
+    @Nullable
     private String accessLogConfigFileInFilesystem = null;
 
+    @Nullable
     public String getAccessLogConfigFileInClasspath() {
         return accessLogConfigFileInClasspath;
     }
 
-    public void setAccessLogConfigFileInClasspath(String accessLogConfigFileInClasspath) {
+    /**
+     * This is checked after the value set in {@link HttpServerWrapperConfig#setAccessLogConfigFileInFilesystem(String)}.
+     * The default value points to a bundled config file that prints combined access log to the console's stdout.
+     *
+     * Setting this nulls the accessLogConfigFileInFilesystem.
+     *
+     * @param accessLogConfigFileInClasspath Classpath path to logback-access config file.
+     */
+    public void setAccessLogConfigFileInClasspath(@Nullable String accessLogConfigFileInClasspath) {
         this.accessLogConfigFileInFilesystem = null;
         this.accessLogConfigFileInClasspath = accessLogConfigFileInClasspath;
     }
 
+    @Nullable
     public String getAccessLogConfigFileInFilesystem() {
         return accessLogConfigFileInFilesystem;
     }
 
-    public void setAccessLogConfigFileInFilesystem(String accessLogConfigFileInFilesystem) {
+    /**
+     * If this is not set, the value set in {@link HttpServerWrapperConfig#setAccessLogConfigFileInClasspath(String)} is
+     * used.
+     *
+     * Setting this nulls the accessLogConfigFileInClasspath.
+     *
+     * @param accessLogConfigFileInFilesystem
+     *         Filesystem path to logback-access config file.
+     */
+    public void setAccessLogConfigFileInFilesystem(@Nullable String accessLogConfigFileInFilesystem) {
         this.accessLogConfigFileInClasspath = null;
         this.accessLogConfigFileInFilesystem = accessLogConfigFileInFilesystem;
     }
@@ -54,16 +78,57 @@ public final class HttpServerWrapperConfig {
         this.maxFormContentSize = maxFormContentSize;
     }
 
-    public void addHttpServerListenerConfig(HttpServerListenerConfig config) {
-        listenerConfigs.add(config);
+    /**
+     * Add config for a connector.
+     *
+     * @param connectorConfig a connector config
+     */
+    public void addHttpServerConnectorConfig(@Nonnull HttpServerConnectorConfig connectorConfig) {
+        connectorConfigs.add(checkNotNull(connectorConfig));
     }
 
-    public HttpServerWrapperConfig withHttpServerListenerConfig(HttpServerListenerConfig config) {
-        addHttpServerListenerConfig(config);
+    @Nonnull
+    public List<HttpServerConnectorConfig> getHttpServerConnectorConfigs() {
+        return connectorConfigs;
+    }
+
+    /**
+     * @return this
+     * @see HttpServerWrapperConfig#addHttpServerConnectorConfig(HttpServerConnectorConfig)
+     */
+    @Nonnull
+    public HttpServerWrapperConfig withHttpServerConnectorConfig(@Nonnull HttpServerConnectorConfig config) {
+        addHttpServerConnectorConfig(config);
         return this;
     }
 
-    List<HttpServerListenerConfig> getHttpServerListeners() {
-        return listenerConfigs;
+    /**
+     * @return this
+     * @see HttpServerWrapperConfig#setAccessLogConfigFileInClasspath(String)
+     */
+    @Nonnull
+    public HttpServerWrapperConfig withAccessLogConfigFileInClasspath(@Nullable String accessLogConfigFileInClasspath) {
+        setAccessLogConfigFileInClasspath(accessLogConfigFileInClasspath);
+        return this;
+    }
+
+    /**
+     * @return this
+     * @see HttpServerWrapperConfig#setAccessLogConfigFileInFilesystem(String)
+     */
+    @Nonnull
+    public HttpServerWrapperConfig withAccessLogConfigFileInFilesystem(@Nullable String accessLogConfigFileInFilesystem) {
+        setAccessLogConfigFileInFilesystem(accessLogConfigFileInFilesystem);
+        return this;
+    }
+
+    /**
+     * @return this
+     * @see HttpServerWrapperConfig#setMaxFormContentSize(int)
+     */
+    @Nonnull
+    public HttpServerWrapperConfig withMaxFormContentSize(int maxFormContentSize) {
+        setMaxFormContentSize(maxFormContentSize);
+        return this;
     }
 }
