@@ -80,14 +80,9 @@ public class HttpServerWrapper {
 
         for (HttpServerListenerConfig listenerConfig : httpServerWrapperConfig.getHttpServerListeners()) {
             if (listenerConfig.isTls()) {
-                URL keystoreUrl = ConfigUris.toUrl(listenerConfig.getTlsKeystoreUri());
-                Preconditions.checkNotNull(keystoreUrl, "null keystore url");
-                InputStream stream = keystoreUrl.openStream();
-                KeyStore keyStore = KeyStore.getInstance(listenerConfig.getTlsKeystoreType());
-                keyStore.load(stream, listenerConfig.getTlsKeystorePassphrase().toCharArray());
 
                 SslContextFactory sslContextFactory = new SslContextFactory();
-                sslContextFactory.setKeyStore(keyStore);
+                sslContextFactory.setKeyStore(listenerConfig.getTlsKeystore());
                 sslContextFactory.setKeyStorePassword(listenerConfig.getTlsKeystorePassphrase());
 
                 sslContextFactory.setIncludeCipherSuites(listenerConfig.getTlsCipherSuites()

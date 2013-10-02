@@ -30,8 +30,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
-import java.net.URI;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.logging.LogManager;
@@ -130,13 +133,18 @@ public final class HttpServerWrapperTest {
         return injector.getInstance(HttpServerWrapperFactory.class).getHttpServer(config);
     }
 
-    private static HttpServerWrapperConfig getDefaultConfig() {
+    private static HttpServerWrapperConfig getDefaultConfig() throws KeyStoreException, CertificateException,
+        NoSuchAlgorithmException, IOException {
         HttpServerWrapperConfig config = new HttpServerWrapperConfig();
 
         config.addHttpServerListenerConfig(HttpServerListenerConfig.forHttp("localhost", 8080));
         HttpServerListenerConfig httpsConfig = HttpServerListenerConfig.forHttps("localhost", 8443);
 
-        httpsConfig.setTlsKeystoreUri(URI.create("classpath:/cert-and-key.p12"));
+        InputStream stream = HttpServerWrapperTest.class.getResourceAsStream("/cert-and-key.p12");
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(stream, "password".toCharArray());
+
+        httpsConfig.setTlsKeystore(keyStore);
         httpsConfig.setTlsKeystorePassphrase("password");
 
         config.addHttpServerListenerConfig(httpsConfig);
