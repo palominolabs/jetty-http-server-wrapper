@@ -27,7 +27,8 @@ dependencies {
   testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
   testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
 
-  compile 'org.eclipse.jetty:jetty-servlet:9.1.0.v20131115'
+  compile 'org.eclipse.jetty:jetty-servlet:9.1.1.v20140108'
+
   compile "com.google.inject.extensions:guice-servlet:$depVersions.guice"
   compile "com.google.inject.extensions:guice-assistedinject:$depVersions.guice"
   compile 'ch.qos.logback:logback-access:1.0.13'
