@@ -43,6 +43,9 @@ import static org.junit.Assert.assertEquals;
 
 public final class HttpServerWrapperTest {
 
+    private static final int TLS_PORT = 28443;
+    private static final int HTTP_PORT = 28080;
+
     private CloseableHttpClient client;
     private HttpServerWrapper server;
 
@@ -100,14 +103,14 @@ public final class HttpServerWrapperTest {
 
     @Test
     public void testHttps() throws Exception {
-        HttpResponse response = client.execute(new HttpGet("https://localhost:" + 8443 + "/test"));
+        HttpResponse response = client.execute(new HttpGet("https://localhost:" + TLS_PORT + "/test"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         assertEquals("test", EntityUtils.toString(response.getEntity()));
     }
 
     @Test
     public void testHttp() throws Exception {
-        HttpResponse response = client.execute(new HttpGet("http://localhost:" + 8080 + "/test"));
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT + "/test"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         assertEquals("test", EntityUtils.toString(response.getEntity()));
     }
@@ -136,19 +139,18 @@ public final class HttpServerWrapperTest {
     private static HttpServerWrapperConfig getDefaultConfig() throws KeyStoreException, CertificateException,
         NoSuchAlgorithmException, IOException {
 
-
         InputStream stream = HttpServerWrapperTest.class.getResourceAsStream("/cert-and-key.p12");
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(stream, "password".toCharArray());
 
-        HttpServerConnectorConfig httpsConfig = HttpServerConnectorConfig.forHttps("localhost", 8443)
+        HttpServerConnectorConfig httpsConfig = HttpServerConnectorConfig.forHttps("localhost", TLS_PORT)
             .withTlsKeystore(keyStore)
             .withTlsKeystorePassphrase("password");
 
         return new HttpServerWrapperConfig()
             .withAccessLogConfigFileInClasspath("/logback-access-test.xml")
             .withHttpServerConnectorConfig(httpsConfig)
-            .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", 8080));
+            .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", HTTP_PORT));
     }
 
     @Singleton
