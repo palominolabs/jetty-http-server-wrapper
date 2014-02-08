@@ -30,6 +30,8 @@ public final class HttpServerWrapperConfig {
     @Nullable
     private String accessLogConfigFileInFilesystem = null;
 
+    private boolean logbackAccessQuiet = true;
+
     @Nullable
     public String getAccessLogConfigFileInClasspath() {
         return accessLogConfigFileInClasspath;
@@ -95,6 +97,19 @@ public final class HttpServerWrapperConfig {
         return connectorConfigs;
     }
 
+    public boolean isLogbackAccessQuiet() {
+        return logbackAccessQuiet;
+    }
+
+    /**
+     * Sets the Logback Access request log handler's quiet flag.
+     *
+     * @param logbackAccessQuiet true to muffle Logback status messages on startup, false to allow them.
+     */
+    public void setLogbackAccessQuiet(boolean logbackAccessQuiet) {
+        this.logbackAccessQuiet = logbackAccessQuiet;
+    }
+
     /**
      * @return this
      * @see HttpServerWrapperConfig#addHttpServerConnectorConfig(HttpServerConnectorConfig)
@@ -135,4 +150,15 @@ public final class HttpServerWrapperConfig {
         setMaxFormContentSize(maxFormContentSize);
         return this;
     }
+
+    /**
+     * @return this
+     * @see HttpServerWrapperConfig#setLogbackAccessQuiet(boolean)
+     */
+    @Nonnull
+    public HttpServerWrapperConfig withLogbackAccessQuiet(boolean logbackAccessQuiet) {
+        setLogbackAccessQuiet(logbackAccessQuiet);
+        return this;
+    }
+
 }

@@ -61,6 +61,7 @@ public class HttpServerWrapper {
         // add logback-access request log
         RequestLogHandler logHandler = new RequestLogHandler();
         RequestLogImpl logbackRequestLog = new RequestLogImpl();
+        logbackRequestLog.setQuiet(httpServerWrapperConfig.isLogbackAccessQuiet());
         if (httpServerWrapperConfig.getAccessLogConfigFileInFilesystem() != null) {
             logger.debug("Setting logback access config fs path to " +
                 httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
