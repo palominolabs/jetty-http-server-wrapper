@@ -117,7 +117,7 @@ public final class HttpServerConnectorConfig {
      * @see HttpServerConnectorConfig#setTlsProtocols(List)
      */
     @Nonnull
-    HttpServerConnectorConfig withTlsProtocols(@Nonnull List<String> tlsProtocols) {
+    public HttpServerConnectorConfig withTlsProtocols(@Nonnull List<String> tlsProtocols) {
         setTlsProtocols(tlsProtocols);
         return this;
     }
@@ -127,7 +127,7 @@ public final class HttpServerConnectorConfig {
      * @see HttpServerConnectorConfig#setTlsCipherSuites(List)
      */
     @Nonnull
-    HttpServerConnectorConfig withTlsCipherSuites(@Nonnull List<String> tlsCipherSuites) {
+    public HttpServerConnectorConfig withTlsCipherSuites(@Nonnull List<String> tlsCipherSuites) {
         setTlsCipherSuites(tlsCipherSuites);
         return this;
     }
@@ -137,7 +137,7 @@ public final class HttpServerConnectorConfig {
      * @see HttpServerConnectorConfig#setTlsKeystorePassphrase(String)
      */
     @Nonnull
-    HttpServerConnectorConfig withTlsKeystorePassphrase(@Nonnull String tlsKeystorePassphrase) {
+    public HttpServerConnectorConfig withTlsKeystorePassphrase(@Nonnull String tlsKeystorePassphrase) {
         setTlsKeystorePassphrase(tlsKeystorePassphrase);
         return this;
     }
@@ -147,7 +147,7 @@ public final class HttpServerConnectorConfig {
      * @see HttpServerConnectorConfig#setTlsKeystore(KeyStore)
      */
     @Nonnull
-    HttpServerConnectorConfig withTlsKeystore(@Nonnull KeyStore tlsKeystore) {
+    public HttpServerConnectorConfig withTlsKeystore(@Nonnull KeyStore tlsKeystore) {
         setTlsKeystore(tlsKeystore);
         return this;
     }
