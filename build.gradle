@@ -7,18 +7,17 @@ version = '1.0.5-SNAPSHOT'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
 
 ext {
   depVersions = [
-      slf4j: '1.7.5',
+      slf4j: '1.7.6',
       guice: '3.0'
   ]
 }
 
 dependencies {
-  compile 'com.google.code.findbugs:jsr305:2.0.1'
-  compile 'com.google.guava:guava:15.0'
+  compile 'com.google.code.findbugs:jsr305:2.0.3'
+  compile 'com.google.guava:guava:16.0.1'
   compile 'com.palominolabs.config:config-inject:1.0.0'
 
   compile "org.slf4j:slf4j-api:$depVersions.slf4j"
@@ -27,13 +26,13 @@ dependencies {
   testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
   testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
 
-  compile 'org.eclipse.jetty:jetty-servlet:9.1.1.v20140108'
+  compile 'org.eclipse.jetty:jetty-servlet:9.1.3.v20140225'
 
   compile "com.google.inject.extensions:guice-servlet:$depVersions.guice"
   compile "com.google.inject.extensions:guice-assistedinject:$depVersions.guice"
-  compile 'ch.qos.logback:logback-access:1.0.13'
+  compile 'ch.qos.logback:logback-access:1.1.1'
 
-  testCompile 'org.apache.httpcomponents:httpclient:4.3.1'
+  testCompile 'org.apache.httpcomponents:httpclient:4.3.3'
 
   testCompile 'junit:junit:4.11'
 }
