@@ -4,6 +4,7 @@
 
 package com.palominolabs.http.server;
 
+import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -41,6 +42,7 @@ import java.security.cert.X509Certificate;
 import java.util.logging.LogManager;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public final class HttpServerWrapperTest {
 
@@ -154,6 +156,37 @@ public final class HttpServerWrapperTest {
         assertEquals("static resource", EntityUtils.toString(response.getEntity()));
     }
 
+    @Test
+    public void testNoDirectoryListing() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/static1"));
+        assertEquals(403, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void testWithDirectoryListing() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/with-dir-listing"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertTrue(EntityUtils.toString(response.getEntity()).contains("static-res-1.txt"));
+    }
+
+    @Test
+    public void testWithIndexPage() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/with-index"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("index file", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testWithAltIndexPage() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/with-alt-index"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("alt index", EntityUtils.toString(response.getEntity()));
+    }
+
     private static HttpServerWrapper getServer(HttpServerWrapperConfig config) {
 
         Injector injector = Guice.createInjector(new AbstractModule() {
@@ -203,6 +236,20 @@ public final class HttpServerWrapperTest {
             .withBaseResource(Resource.newClassPathResource("/resourceBase2"))
             .withContextPath("/conflict");
 
+        ResourceHandlerConfig withDirListing = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
+            .withDirectoryListing(true)
+            .withContextPath("/with-dir-listing");
+
+        ResourceHandlerConfig withIndex = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/withIndex"))
+            .withContextPath("/with-index");
+
+        ResourceHandlerConfig withAltIndex = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/withAltIndex"))
+            .withContextPath("/with-alt-index")
+            .withWelcomeFiles(Lists.newArrayList("alt-index.txt"));
+
         return new HttpServerWrapperConfig()
             .withAccessLogConfigFileInClasspath("/logback-access-test.xml")
             .withHttpServerConnectorConfig(httpsConfig)
@@ -210,7 +257,10 @@ public final class HttpServerWrapperTest {
             .withResourceHandlerConfig(resourceHandlerConfig1)
             .withResourceHandlerConfig(resourceHandlerConfig2)
             .withResourceHandlerConfig(resourceHandlerConfigConflict1)
-            .withResourceHandlerConfig(resourceHandlerConfigConflict2);
+            .withResourceHandlerConfig(resourceHandlerConfigConflict2)
+            .withResourceHandlerConfig(withDirListing)
+            .withResourceHandlerConfig(withIndex)
+            .withResourceHandlerConfig(withAltIndex);
     }
 
     @Singleton
