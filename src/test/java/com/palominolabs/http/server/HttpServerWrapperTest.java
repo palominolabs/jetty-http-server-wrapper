@@ -4,6 +4,7 @@
 
 package com.palominolabs.http.server;
 
+import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -16,6 +17,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.jetty.util.resource.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -40,6 +42,7 @@ import java.security.cert.X509Certificate;
 import java.util.logging.LogManager;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public final class HttpServerWrapperTest {
 
@@ -102,17 +105,86 @@ public final class HttpServerWrapperTest {
     }
 
     @Test
-    public void testHttps() throws Exception {
+    public void testServletHttps() throws Exception {
         HttpResponse response = client.execute(new HttpGet("https://localhost:" + TLS_PORT + "/test"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         assertEquals("test", EntityUtils.toString(response.getEntity()));
     }
 
     @Test
-    public void testHttp() throws Exception {
+    public void testServletHttp() throws Exception {
         HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT + "/test"));
         assertEquals(200, response.getStatusLine().getStatusCode());
         assertEquals("test", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void test404() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT + "/nowhere"));
+        assertEquals(404, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void testResourceHandler() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/static1/static-res-1.txt"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("res1", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testResourceHandlerMappedToRoot() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/static-res-2.txt"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("res2", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testResourceHandlersMappedToSameContextPrefersFirst() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/conflict/name-conflict.txt"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("conflict1", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testUrlMappedToServletAndResourceHandlerIsHandledByResourceHandler() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/conflict-with-servlet"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("static resource", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testNoDirectoryListing() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/static1"));
+        assertEquals(403, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void testWithDirectoryListing() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/with-dir-listing"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertTrue(EntityUtils.toString(response.getEntity()).contains("static-res-1.txt"));
+    }
+
+    @Test
+    public void testWithIndexPage() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/with-index"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("index file", EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testWithAltIndexPage() throws IOException {
+        HttpResponse response = client.execute(new HttpGet("http://localhost:" + HTTP_PORT +
+            "/with-alt-index"));
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        assertEquals("alt index", EntityUtils.toString(response.getEntity()));
     }
 
     private static HttpServerWrapper getServer(HttpServerWrapperConfig config) {
@@ -128,6 +200,7 @@ public final class HttpServerWrapperTest {
                     protected void configureServlets() {
                         bind(TestServlet.class);
                         serve("/test").with(TestServlet.class);
+                        serve("/conflict-with-servlet").with(TestServlet.class);
                     }
                 });
             }
@@ -147,10 +220,47 @@ public final class HttpServerWrapperTest {
             .withTlsKeystore(keyStore)
             .withTlsKeystorePassphrase("password");
 
+        ResourceHandlerConfig resourceHandlerConfig1 = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
+            .withContextPath("/static1");
+
+        ResourceHandlerConfig resourceHandlerConfig2 = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
+            .withContextPath("/");
+
+        ResourceHandlerConfig resourceHandlerConfigConflict1 = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
+            .withContextPath("/conflict");
+
+        ResourceHandlerConfig resourceHandlerConfigConflict2 = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/resourceBase2"))
+            .withContextPath("/conflict");
+
+        ResourceHandlerConfig withDirListing = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
+            .withDirectoryListing(true)
+            .withContextPath("/with-dir-listing");
+
+        ResourceHandlerConfig withIndex = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/withIndex"))
+            .withContextPath("/with-index");
+
+        ResourceHandlerConfig withAltIndex = new ResourceHandlerConfig()
+            .withBaseResource(Resource.newClassPathResource("/withAltIndex"))
+            .withContextPath("/with-alt-index")
+            .withWelcomeFiles(Lists.newArrayList("alt-index.txt"));
+
         return new HttpServerWrapperConfig()
             .withAccessLogConfigFileInClasspath("/logback-access-test.xml")
             .withHttpServerConnectorConfig(httpsConfig)
-            .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", HTTP_PORT));
+            .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", HTTP_PORT))
+            .withResourceHandlerConfig(resourceHandlerConfig1)
+            .withResourceHandlerConfig(resourceHandlerConfig2)
+            .withResourceHandlerConfig(resourceHandlerConfigConflict1)
+            .withResourceHandlerConfig(resourceHandlerConfigConflict2)
+            .withResourceHandlerConfig(withDirListing)
+            .withResourceHandlerConfig(withIndex)
+            .withResourceHandlerConfig(withAltIndex);
     }
 
     @Singleton

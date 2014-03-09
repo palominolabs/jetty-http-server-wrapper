@@ -31,10 +31,10 @@ injector.getInstance(HttpServerWrapperFactory.class)
 // you now have a server listening on localhost:8080
 ```
 
-Requests that do not match any configured pattern for GuiceFilter (in this case, the `/somewhere` pattern configured in the ServletModule) will end up at a simple servlet that just returns an HTTP 404.
+Requests that do not match any configured pattern for GuiceFilter (in this case, the `/somewhere` pattern configured in the ServletModule) will 404.
 
 # What's In The Box
-There are four main classes you'll interact with.
+There are a few main classes you'll interact with.
 
 ### [`HttpServerConnectorConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerConnectorConfig.java)
 This class represents one individual connector. A server can have many connectors listening on different ports and with or without TLS.
