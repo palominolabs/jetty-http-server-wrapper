@@ -22,7 +22,13 @@ Injector injector = Guice.createInjector(new AbstractModule() {
         }
     });
 
+// serve static files like /static/foo.jpg
+HttpResourceHandlerConfig rhConfig = new HttpResourceHandlerConfig()
+    .withBaseResource(Resource.newClassPathResource("/com/foo/bar/your-assets"))
+    .withContextPath("/static");
+
 HttpServerWrapperConfig config = new HttpServerWrapperConfig()
+            .withResourceHandlerConfig(rhConfig)
             .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", 8080));
 
 injector.getInstance(HttpServerWrapperFactory.class)
@@ -81,6 +87,23 @@ config.withMaxFormContentSize(400000)
 ```
 
 Like `HttpServerConnectorConfig`, you can use `.with*` methods or `.set*` methods to set parameters.
+
+### [`HttpResourceHandlerConfig`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpResourceHandlerConfig.java)
+
+Used for serving static files. See the Javadoc or source for all available config options.
+
+```
+HttpResourceHandlerConfig rhConfig = new HttpResourceHandlerConfig()
+    .withBaseResource(Resource.newClassPathResource("/com/foo/bar/your-assets"))
+    .withWelcomeFiles(Lists.newArrayList("almost-like-index.html", "another-one.html"));
+    .withEtags(true)
+    .withContextPath("/static");
+
+HttpServerWrapperConfig config = new HttpServerWrapperConfig()
+    .withResourceHandlerConfig(rhConfig)
+    ...
+
+```
 
 ### [`HttpServerWrapperFactory`](https://github.com/palominolabs/jetty-http-server-wrapper/blob/master/src/main/java/com/palominolabs/http/server/HttpServerWrapperFactory.java)
 
