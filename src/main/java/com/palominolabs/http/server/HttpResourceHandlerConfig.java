@@ -9,9 +9,11 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
+ * Config for serving static files.
+ *
  * @see org.eclipse.jetty.server.handler.ResourceHandler
  */
-public final class ResourceHandlerConfig {
+public final class HttpResourceHandlerConfig {
     private Resource baseResource;
     private String cacheControlHeader;
     private boolean directoryListing = false;
@@ -66,52 +68,52 @@ public final class ResourceHandlerConfig {
         this.contextPath = contextPath;
     }
 
-    public ResourceHandlerConfig withBaseResource(Resource baseResource) {
+    public HttpResourceHandlerConfig withBaseResource(Resource baseResource) {
         setBaseResource(baseResource);
         return this;
     }
 
-    public ResourceHandlerConfig withCacheControlHeader(String cacheControlHeader) {
+    public HttpResourceHandlerConfig withCacheControlHeader(String cacheControlHeader) {
         setCacheControlHeader(cacheControlHeader);
         return this;
     }
 
-    public ResourceHandlerConfig withDirectoryListing(boolean directoryListing) {
+    public HttpResourceHandlerConfig withDirectoryListing(boolean directoryListing) {
         setDirectoryListing(directoryListing);
         return this;
     }
 
-    public ResourceHandlerConfig withEtags(boolean etags) {
+    public HttpResourceHandlerConfig withEtags(boolean etags) {
         setEtags(etags);
         return this;
     }
 
-    public ResourceHandlerConfig withMimeTypes(MimeTypes mimeTypes) {
+    public HttpResourceHandlerConfig withMimeTypes(MimeTypes mimeTypes) {
         setMimeTypes(mimeTypes);
         return this;
     }
 
-    public ResourceHandlerConfig withMinAsyncContentLength(int minAsyncContentLength) {
+    public HttpResourceHandlerConfig withMinAsyncContentLength(int minAsyncContentLength) {
         setMinAsyncContentLength(minAsyncContentLength);
         return this;
     }
 
-    public ResourceHandlerConfig withMinMemoryMappedContentLength(int minMemoryMappedContentLength) {
+    public HttpResourceHandlerConfig withMinMemoryMappedContentLength(int minMemoryMappedContentLength) {
         setMinMemoryMappedContentLength(minMemoryMappedContentLength);
         return this;
     }
 
-    public ResourceHandlerConfig withStylesheetPath(String stylesheetPath) {
+    public HttpResourceHandlerConfig withStylesheetPath(String stylesheetPath) {
         setStylesheetPath(stylesheetPath);
         return this;
     }
 
-    public ResourceHandlerConfig withWelcomeFiles(List<String> welcomeFiles) {
+    public HttpResourceHandlerConfig withWelcomeFiles(List<String> welcomeFiles) {
         setWelcomeFiles(welcomeFiles);
         return this;
     }
 
-    public ResourceHandlerConfig withContextPath(@Nonnull String contextPath) {
+    public HttpResourceHandlerConfig withContextPath(@Nonnull String contextPath) {
         setContextPath(contextPath);
         return this;
     }

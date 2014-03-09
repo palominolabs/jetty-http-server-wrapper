@@ -32,7 +32,7 @@ public final class HttpServerWrapperConfig {
 
     private boolean logbackAccessQuiet = true;
 
-    private final List<ResourceHandlerConfig> resourceHandlerConfigs = newArrayList();
+    private final List<HttpResourceHandlerConfig> httpResourceHandlerConfigs = newArrayList();
 
     @Nullable
     public String getAccessLogConfigFileInClasspath() {
@@ -94,12 +94,12 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * Add a ResourceHandlerConfig for serving static resources.
+     * Add a HttpResourceHandlerConfig for serving static resources.
      *
-     * @param resourceHandlerConfig a resource handler config
+     * @param httpResourceHandlerConfig a resource handler config
      */
-    public void addResourceHandlerConfig(@Nonnull ResourceHandlerConfig resourceHandlerConfig) {
-        resourceHandlerConfigs.add(resourceHandlerConfig);
+    public void addResourceHandlerConfig(@Nonnull HttpResourceHandlerConfig httpResourceHandlerConfig) {
+        httpResourceHandlerConfigs.add(httpResourceHandlerConfig);
     }
 
     @Nonnull
@@ -173,15 +173,15 @@ public final class HttpServerWrapperConfig {
 
     /**
      * @return this
-     * @see HttpServerWrapperConfig#addResourceHandlerConfig(ResourceHandlerConfig)
+     * @see HttpServerWrapperConfig#addResourceHandlerConfig(HttpResourceHandlerConfig)
      */
-    public HttpServerWrapperConfig withResourceHandlerConfig(@Nonnull ResourceHandlerConfig resourceHandlerConfig) {
-        addResourceHandlerConfig(resourceHandlerConfig);
+    public HttpServerWrapperConfig withResourceHandlerConfig(@Nonnull HttpResourceHandlerConfig httpResourceHandlerConfig) {
+        addResourceHandlerConfig(httpResourceHandlerConfig);
         return this;
     }
 
     @Nonnull
-    public List<ResourceHandlerConfig> getResourceHandlerConfigs() {
-        return resourceHandlerConfigs;
+    public List<HttpResourceHandlerConfig> getHttpResourceHandlerConfigs() {
+        return httpResourceHandlerConfigs;
     }
 }

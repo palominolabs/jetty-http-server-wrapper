@@ -18,7 +18,6 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,12 +69,12 @@ public class HttpServerWrapper {
             logger.info("No access logging configured.");
         }
 
-        if (!httpServerWrapperConfig.getResourceHandlerConfigs().isEmpty()) {
+        if (!httpServerWrapperConfig.getHttpResourceHandlerConfigs().isEmpty()) {
             ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
 
             List<ContextHandler> contextHandlers = Lists.newArrayList();
-            for (ResourceHandlerConfig resourceHandlerConfig : httpServerWrapperConfig.getResourceHandlerConfigs()) {
-                contextHandlers.add(resourceHandlerConfig.buildHandler());
+            for (HttpResourceHandlerConfig httpResourceHandlerConfig : httpServerWrapperConfig.getHttpResourceHandlerConfigs()) {
+                contextHandlers.add(httpResourceHandlerConfig.buildHandler());
             }
 
             contextHandlerCollection.setHandlers(contextHandlers.toArray(new Handler[contextHandlers.size()]));

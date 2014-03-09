@@ -220,32 +220,32 @@ public final class HttpServerWrapperTest {
             .withTlsKeystore(keyStore)
             .withTlsKeystorePassphrase("password");
 
-        ResourceHandlerConfig resourceHandlerConfig1 = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig httpResourceHandlerConfig1 = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
             .withContextPath("/static1");
 
-        ResourceHandlerConfig resourceHandlerConfig2 = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig httpResourceHandlerConfig2 = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
             .withContextPath("/");
 
-        ResourceHandlerConfig resourceHandlerConfigConflict1 = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig httpResourceHandlerConfigConflict1 = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
             .withContextPath("/conflict");
 
-        ResourceHandlerConfig resourceHandlerConfigConflict2 = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig httpResourceHandlerConfigConflict2 = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/resourceBase2"))
             .withContextPath("/conflict");
 
-        ResourceHandlerConfig withDirListing = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig withDirListing = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/resourceBase1"))
             .withDirectoryListing(true)
             .withContextPath("/with-dir-listing");
 
-        ResourceHandlerConfig withIndex = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig withIndex = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/withIndex"))
             .withContextPath("/with-index");
 
-        ResourceHandlerConfig withAltIndex = new ResourceHandlerConfig()
+        HttpResourceHandlerConfig withAltIndex = new HttpResourceHandlerConfig()
             .withBaseResource(Resource.newClassPathResource("/withAltIndex"))
             .withContextPath("/with-alt-index")
             .withWelcomeFiles(Lists.newArrayList("alt-index.txt"));
@@ -254,10 +254,10 @@ public final class HttpServerWrapperTest {
             .withAccessLogConfigFileInClasspath("/logback-access-test.xml")
             .withHttpServerConnectorConfig(httpsConfig)
             .withHttpServerConnectorConfig(HttpServerConnectorConfig.forHttp("localhost", HTTP_PORT))
-            .withResourceHandlerConfig(resourceHandlerConfig1)
-            .withResourceHandlerConfig(resourceHandlerConfig2)
-            .withResourceHandlerConfig(resourceHandlerConfigConflict1)
-            .withResourceHandlerConfig(resourceHandlerConfigConflict2)
+            .withResourceHandlerConfig(httpResourceHandlerConfig1)
+            .withResourceHandlerConfig(httpResourceHandlerConfig2)
+            .withResourceHandlerConfig(httpResourceHandlerConfigConflict1)
+            .withResourceHandlerConfig(httpResourceHandlerConfigConflict2)
             .withResourceHandlerConfig(withDirListing)
             .withResourceHandlerConfig(withIndex)
             .withResourceHandlerConfig(withAltIndex);
