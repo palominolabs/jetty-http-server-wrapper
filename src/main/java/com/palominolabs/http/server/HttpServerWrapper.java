@@ -83,14 +83,11 @@ public class HttpServerWrapper {
             handlerCollection.addHandler(contextHandlerCollection);
         }
 
-        // servlet handler will contain the UnhandledRequestServlet and the GuiceFilter
         ServletContextHandler servletHandler = new ServletContextHandler();
         // TODO configurable context path for servlets
         servletHandler.setContextPath("/");
 
         servletHandler.setMaxFormContentSize(httpServerWrapperConfig.getMaxFormContentSize());
-
-//        servletHandler.addServlet(new ServletHolder(new UnhandledRequestServlet()), "/*");
 
         // add guice servlet filter
         FilterHolder filterHolder = new FilterHolder(filter);
