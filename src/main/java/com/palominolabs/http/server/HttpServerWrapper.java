@@ -5,11 +5,15 @@
 package com.palominolabs.http.server;
 
 import ch.qos.logback.access.jetty.RequestLogImpl;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.servlet.GuiceFilter;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -22,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Runs an embedded jetty server. Sets up the guice servlet filter and request logging.
@@ -43,27 +48,14 @@ public class HttpServerWrapper {
 
     public void start() throws Exception {
 
-        // servlet handler will contain the UnhandledRequestServlet and the GuiceFilter
-        ServletContextHandler servletHandler = new ServletContextHandler();
-        servletHandler.setContextPath("/");
-
-        servletHandler.setMaxFormContentSize(httpServerWrapperConfig.getMaxFormContentSize());
-
-        servletHandler.addServlet(new ServletHolder(new UnhandledRequestServlet()), "/*");
-
-        // add guice servlet filter
-        FilterHolder filterHolder = new FilterHolder(filter);
-        servletHandler.addFilter(filterHolder, "/*", EnumSet.allOf(DispatcherType.class));
-
         HandlerCollection handlerCollection = new HandlerCollection();
-        handlerCollection.addHandler(servletHandler);
 
         // add logback-access request log
         RequestLogHandler logHandler = new RequestLogHandler();
         RequestLogImpl logbackRequestLog = new RequestLogImpl();
         logbackRequestLog.setQuiet(httpServerWrapperConfig.isLogbackAccessQuiet());
         if (httpServerWrapperConfig.getAccessLogConfigFileInFilesystem() != null) {
-            logger.debug("Setting logback access config fs path to " +
+            logger.debug("Loading logback access config from fs path " +
                 httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
             logbackRequestLog.setFileName(httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
             logHandler.setRequestLog(logbackRequestLog);
@@ -77,6 +69,33 @@ public class HttpServerWrapper {
         } else {
             logger.info("No access logging configured.");
         }
+
+        if (!httpServerWrapperConfig.getResourceHandlerConfigs().isEmpty()) {
+            ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
+
+            List<ContextHandler> contextHandlers = Lists.newArrayList();
+            for (ResourceHandlerConfig resourceHandlerConfig : httpServerWrapperConfig.getResourceHandlerConfigs()) {
+                contextHandlers.add(resourceHandlerConfig.buildHandler());
+            }
+
+            contextHandlerCollection.setHandlers(contextHandlers.toArray(new Handler[contextHandlers.size()]));
+
+            handlerCollection.addHandler(contextHandlerCollection);
+        }
+
+        // servlet handler will contain the UnhandledRequestServlet and the GuiceFilter
+        ServletContextHandler servletHandler = new ServletContextHandler();
+        // TODO configurable context path for servlets
+        servletHandler.setContextPath("/");
+
+        servletHandler.setMaxFormContentSize(httpServerWrapperConfig.getMaxFormContentSize());
+
+//        servletHandler.addServlet(new ServletHolder(new UnhandledRequestServlet()), "/*");
+
+        // add guice servlet filter
+        FilterHolder filterHolder = new FilterHolder(filter);
+        servletHandler.addFilter(filterHolder, "/*", EnumSet.allOf(DispatcherType.class));
+        handlerCollection.addHandler(servletHandler);
 
         server.setHandler(handlerCollection);
 

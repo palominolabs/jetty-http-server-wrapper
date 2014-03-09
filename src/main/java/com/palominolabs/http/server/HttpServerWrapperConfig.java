@@ -32,6 +32,8 @@ public final class HttpServerWrapperConfig {
 
     private boolean logbackAccessQuiet = true;
 
+    private final List<ResourceHandlerConfig> resourceHandlerConfigs = newArrayList();
+
     @Nullable
     public String getAccessLogConfigFileInClasspath() {
         return accessLogConfigFileInClasspath;
@@ -61,8 +63,7 @@ public final class HttpServerWrapperConfig {
      *
      * Setting this nulls the accessLogConfigFileInClasspath.
      *
-     * @param accessLogConfigFileInFilesystem
-     *         Filesystem path to logback-access config file.
+     * @param accessLogConfigFileInFilesystem Filesystem path to logback-access config file.
      */
     public void setAccessLogConfigFileInFilesystem(@Nullable String accessLogConfigFileInFilesystem) {
         this.accessLogConfigFileInClasspath = null;
@@ -90,6 +91,15 @@ public final class HttpServerWrapperConfig {
      */
     public void addHttpServerConnectorConfig(@Nonnull HttpServerConnectorConfig connectorConfig) {
         connectorConfigs.add(checkNotNull(connectorConfig));
+    }
+
+    /**
+     * Add a ResourceHandlerConfig for serving static resources.
+     *
+     * @param resourceHandlerConfig a resource handler config
+     */
+    public void addResourceHandlerConfig(@Nonnull ResourceHandlerConfig resourceHandlerConfig) {
+        resourceHandlerConfigs.add(resourceHandlerConfig);
     }
 
     @Nonnull
@@ -161,4 +171,17 @@ public final class HttpServerWrapperConfig {
         return this;
     }
 
+    /**
+     * @return this
+     * @see HttpServerWrapperConfig#addResourceHandlerConfig(ResourceHandlerConfig)
+     */
+    public HttpServerWrapperConfig withResourceHandlerConfig(@Nonnull ResourceHandlerConfig resourceHandlerConfig) {
+        addResourceHandlerConfig(resourceHandlerConfig);
+        return this;
+    }
+
+    @Nonnull
+    public List<ResourceHandlerConfig> getResourceHandlerConfigs() {
+        return resourceHandlerConfigs;
+    }
 }
