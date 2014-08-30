@@ -121,6 +121,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
+     * @param config    connector config
      * @return this
      * @see HttpServerWrapperConfig#addHttpServerConnectorConfig(HttpServerConnectorConfig)
      */
@@ -131,6 +132,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
+     * @param accessLogConfigFileInClasspath    classpath path to access log config file
      * @return this
      * @see HttpServerWrapperConfig#setAccessLogConfigFileInClasspath(String)
      */
@@ -141,6 +143,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
+     * @param accessLogConfigFileInFilesystem    filesystem path to access log config file
      * @return this
      * @see HttpServerWrapperConfig#setAccessLogConfigFileInFilesystem(String)
      */
@@ -152,6 +155,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
+     * @param maxFormContentSize    max form content size
      * @return this
      * @see HttpServerWrapperConfig#setMaxFormContentSize(int)
      */
@@ -162,6 +166,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
+     * @param logbackAccessQuiet    logback access 'quiet' mode setting
      * @return this
      * @see HttpServerWrapperConfig#setLogbackAccessQuiet(boolean)
      */
@@ -172,6 +177,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
+     * @param httpResourceHandlerConfig    resource handler config
      * @return this
      * @see HttpServerWrapperConfig#addResourceHandlerConfig(HttpResourceHandlerConfig)
      */

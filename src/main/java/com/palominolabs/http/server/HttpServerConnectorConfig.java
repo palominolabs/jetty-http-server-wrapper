@@ -113,6 +113,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
+     * @param tlsProtocols    tls protocls
      * @return this
      * @see HttpServerConnectorConfig#setTlsProtocols(List)
      */
@@ -123,6 +124,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
+     * @param tlsCipherSuites    tls cipher suites
      * @return this
      * @see HttpServerConnectorConfig#setTlsCipherSuites(List)
      */
@@ -133,6 +135,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
+     * @param tlsKeystorePassphrase    tls keystore passphrase
      * @return this
      * @see HttpServerConnectorConfig#setTlsKeystorePassphrase(String)
      */
@@ -143,6 +146,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
+     * @param tlsKeystore    tls keystore
      * @return this
      * @see HttpServerConnectorConfig#setTlsKeystore(KeyStore)
      */
