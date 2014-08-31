@@ -4,11 +4,13 @@
 
 package com.palominolabs.http.server;
 
+import com.google.inject.Provider;
 import org.eclipse.jetty.server.handler.ContextHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.servlet.ServletContextListener;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -33,6 +35,8 @@ public final class HttpServerWrapperConfig {
     private boolean logbackAccessQuiet = true;
 
     private final List<HttpResourceHandlerConfig> httpResourceHandlerConfigs = newArrayList();
+
+    private final List<ListenerRegistration> servletContextListeners = newArrayList();
 
     @Nullable
     public String getAccessLogConfigFileInClasspath() {
@@ -102,6 +106,25 @@ public final class HttpServerWrapperConfig {
         httpResourceHandlerConfigs.add(httpResourceHandlerConfig);
     }
 
+    /**
+     * @param listener context listener
+     */
+    public void addServletContextListener(ServletContextListener listener) {
+        servletContextListeners.add(ListenerRegistration.forListener(listener));
+    }
+
+    /**
+     * If you want Guice to construct your ServletContextListener instance, consider using {@link BinderProviderCapture}
+     * to make it easier to get a Provider for your ServletContextListener implementation. This will allow Guice to
+     * check at module initialization time that all needed bindings are available, leading to earlier errors (if any are
+     * imminent).
+     *
+     * @param listenerProvider context listener provider
+     */
+    public void addServletContextListenerProvider(Provider<? extends ServletContextListener> listenerProvider) {
+        servletContextListeners.add(ListenerRegistration.forListenerProvider(listenerProvider));
+    }
+
     @Nonnull
     public List<HttpServerConnectorConfig> getHttpServerConnectorConfigs() {
         return connectorConfigs;
@@ -121,7 +144,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * @param config    connector config
+     * @param config connector config
      * @return this
      * @see HttpServerWrapperConfig#addHttpServerConnectorConfig(HttpServerConnectorConfig)
      */
@@ -132,7 +155,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * @param accessLogConfigFileInClasspath    classpath path to access log config file
+     * @param accessLogConfigFileInClasspath classpath path to access log config file
      * @return this
      * @see HttpServerWrapperConfig#setAccessLogConfigFileInClasspath(String)
      */
@@ -143,7 +166,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * @param accessLogConfigFileInFilesystem    filesystem path to access log config file
+     * @param accessLogConfigFileInFilesystem filesystem path to access log config file
      * @return this
      * @see HttpServerWrapperConfig#setAccessLogConfigFileInFilesystem(String)
      */
@@ -155,7 +178,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * @param maxFormContentSize    max form content size
+     * @param maxFormContentSize max form content size
      * @return this
      * @see HttpServerWrapperConfig#setMaxFormContentSize(int)
      */
@@ -166,7 +189,7 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * @param logbackAccessQuiet    logback access 'quiet' mode setting
+     * @param logbackAccessQuiet logback access 'quiet' mode setting
      * @return this
      * @see HttpServerWrapperConfig#setLogbackAccessQuiet(boolean)
      */
@@ -177,11 +200,12 @@ public final class HttpServerWrapperConfig {
     }
 
     /**
-     * @param httpResourceHandlerConfig    resource handler config
+     * @param httpResourceHandlerConfig resource handler config
      * @return this
      * @see HttpServerWrapperConfig#addResourceHandlerConfig(HttpResourceHandlerConfig)
      */
-    public HttpServerWrapperConfig withResourceHandlerConfig(@Nonnull HttpResourceHandlerConfig httpResourceHandlerConfig) {
+    public HttpServerWrapperConfig withResourceHandlerConfig(
+        @Nonnull HttpResourceHandlerConfig httpResourceHandlerConfig) {
         addResourceHandlerConfig(httpResourceHandlerConfig);
         return this;
     }
@@ -189,5 +213,10 @@ public final class HttpServerWrapperConfig {
     @Nonnull
     public List<HttpResourceHandlerConfig> getHttpResourceHandlerConfigs() {
         return httpResourceHandlerConfigs;
+    }
+
+    @Nonnull
+    List<ListenerRegistration> getServletContextListeners() {
+        return servletContextListeners;
     }
 }

@@ -91,6 +91,11 @@ public class HttpServerWrapper {
         // add guice servlet filter
         FilterHolder filterHolder = new FilterHolder(filter);
         servletHandler.addFilter(filterHolder, "/*", EnumSet.allOf(DispatcherType.class));
+
+        for (ListenerRegistration listener : httpServerWrapperConfig.getServletContextListeners()) {
+            listener.apply(servletHandler);
+        }
+
         handlerCollection.addHandler(servletHandler);
 
         server.setHandler(handlerCollection);

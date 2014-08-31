@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.palominolabs.http'
-version = '1.0.6-SNAPSHOT'
+version = '1.1.0-SNAPSHOT'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -33,6 +33,7 @@ dependencies {
   compile 'ch.qos.logback:logback-access:1.1.1'
 
   testCompile 'org.apache.httpcomponents:httpclient:4.3.3'
+  testCompile 'org.easymock:easymock:3.2'
 
   testCompile 'junit:junit:4.11'
 }

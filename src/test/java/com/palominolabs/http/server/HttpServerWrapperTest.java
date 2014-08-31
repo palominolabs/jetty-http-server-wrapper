@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.palominolabs.config.ConfigModuleBuilder;
 import org.apache.http.HttpResponse;
@@ -27,10 +26,6 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -261,16 +256,5 @@ public final class HttpServerWrapperTest {
             .withResourceHandlerConfig(withDirListing)
             .withResourceHandlerConfig(withIndex)
             .withResourceHandlerConfig(withAltIndex);
-    }
-
-    @Singleton
-    public static class TestServlet extends HttpServlet {
-        @Override
-        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.setContentType("text/plain");
-            resp.setContentType("UTF-8");
-            resp.getWriter().append("test");
-        }
     }
 }
