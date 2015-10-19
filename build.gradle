@@ -1,6 +1,17 @@
+import java.time.Instant
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.3.1'
+  }
+}
+
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 
 group = 'com.palominolabs.http'
 version = '1.1.1-SNAPSHOT'
@@ -47,72 +58,54 @@ repositories {
   jcenter()
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+task sourceJar(type: Jar, dependsOn: classes) {
   from sourceSets.main.allJava
-  classifier = 'sources'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
   from javadoc.destinationDir
-  classifier = 'javadoc'
 }
 
-artifacts {
-  // register in 'archives' config so they will be signed
-  archives sourcesJar
-  archives javadocJar
-}
+publishing {
+  publications {
+    bintray(MavenPublication) {
+      from components.java
+      groupId project.group
+      artifactId project.name
+      version project.version
 
-signing {
-  required { gradle.taskGraph.hasTask("uploadArchives") }
-  sign configurations.archives
-}
-
-// Set sonatypeUsername and sonatypePassword in your ~/.gradle/gradle.properties to be able to use this.
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      beforeDeployment { deployment -> signing.signPom(deployment) }
-
-      repository(url: isReleaseVersion ?
-        "https://oss.sonatype.org/service/local/staging/deploy/maven2/" :
-        "https://oss.sonatype.org/content/repositories/snapshots/") {
-        def u = project.hasProperty('sonatypeUsername') ? sonatypeUsername : 'FIXME'
-        def p = project.hasProperty('sonatypePassword') ? sonatypePassword : 'FIXME'
-        authentication(userName: u, password: p)
+      artifact sourceJar {
+        classifier 'sources'
       }
 
-      pom.project {
-        name 'jetty-http-server-wrapper'
-        packaging 'jar'
-        description 'Wrapper around the Jetty HTTP server to make common configuration easier.'
-        url 'https://github.com/palominolabs/jetty-http-server-wrapper'
+      artifact javadocJar {
+        classifier 'javadoc'
+      }
+    }
+  }
+}
 
-        scm {
-          url 'scm:git@github.com:palominolabs/jetty-http-server-wrapper.git'
-          connection 'scm:git@github.com:palominolabs/jetty-http-server-wrapper.git'
-          developerConnection 'scm:git@github.com:palominolabs/jetty-http-server-wrapper.git'
-        }
+bintray {
+  user = rootProject.hasProperty('bintrayUser') ? rootProject.property('bintrayUser') : 'FIXME'
+  key = rootProject.hasProperty('bintrayApiKey') ? rootProject.property('bintrayApiKey') : 'FIXME'
+  publications = ['bintray']
 
-        licenses {
-          license {
-            name 'The Apache Software License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            distribution 'repo'
-          }
-        }
+  pkg {
+    repo = 'maven'
+    licenses = ['Copyfree']
+    vcsUrl = 'https://github.com/palominolabs/jetty-http-server-wrapper'
+    name = 'com.palominolabs.http:jetty-http-server-wrapper'
 
-        developers {
-          developer {
-            id 'marshallpierce'
-            name 'Marshall Pierce'
-          }
-        }
+    version {
+      name = project.version
+      released = Date.from(Instant.now())
+      if (project.isReleaseVersion) {
+        vcsTag = 'v' + project.version
       }
     }
   }
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.0'
+  gradleVersion = '2.7'
 }
