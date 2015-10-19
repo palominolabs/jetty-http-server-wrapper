@@ -3,7 +3,6 @@ package com.palominolabs.http.server;
 import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.Provider;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -20,7 +19,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * etc.
  *
  * It saves the provider to a volatile field, so you can safely use this Provider in threads other than the one that ran
- * the module cofigure() method. However, this class is really just designed for working around awkward chicken-and-egg
+ * the module configure() method. However, this class is really just designed for working around awkward chicken-and-egg
  * problems while initializing a system, so if you find yourself using it beyond that, are you sure you can't just
  * inject things normally into whatever you're currently passing this Provider implementation to?
  *

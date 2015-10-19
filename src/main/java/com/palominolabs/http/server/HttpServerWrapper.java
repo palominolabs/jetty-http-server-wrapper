@@ -9,6 +9,10 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.servlet.GuiceFilter;
+import java.util.EnumSet;
+import java.util.List;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.servlet.DispatcherType;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -21,11 +25,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.concurrent.ThreadSafe;
-import javax.servlet.DispatcherType;
-import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Runs an embedded jetty server. Sets up the guice servlet filter and request logging.
@@ -55,13 +54,13 @@ public class HttpServerWrapper {
         logbackRequestLog.setQuiet(httpServerWrapperConfig.isLogbackAccessQuiet());
         if (httpServerWrapperConfig.getAccessLogConfigFileInFilesystem() != null) {
             logger.debug("Loading logback access config from fs path " +
-                httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
+                    httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
             logbackRequestLog.setFileName(httpServerWrapperConfig.getAccessLogConfigFileInFilesystem());
             logHandler.setRequestLog(logbackRequestLog);
             handlerCollection.addHandler(logHandler);
         } else if (httpServerWrapperConfig.getAccessLogConfigFileInClasspath() != null) {
             logger.debug("Loading logback access config from classpath path " + httpServerWrapperConfig
-                .getAccessLogConfigFileInClasspath());
+                    .getAccessLogConfigFileInClasspath());
             logbackRequestLog.setResource(httpServerWrapperConfig.getAccessLogConfigFileInClasspath());
             logHandler.setRequestLog(logbackRequestLog);
             handlerCollection.addHandler(logHandler);
@@ -73,7 +72,8 @@ public class HttpServerWrapper {
             ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
 
             List<ContextHandler> contextHandlers = Lists.newArrayList();
-            for (HttpResourceHandlerConfig httpResourceHandlerConfig : httpServerWrapperConfig.getHttpResourceHandlerConfigs()) {
+            for (HttpResourceHandlerConfig httpResourceHandlerConfig : httpServerWrapperConfig
+                    .getHttpResourceHandlerConfigs()) {
                 contextHandlers.add(httpResourceHandlerConfig.buildHandler());
             }
 
@@ -102,15 +102,15 @@ public class HttpServerWrapper {
 
         for (HttpServerConnectorConfig connectorConfig : httpServerWrapperConfig.getHttpServerConnectorConfigs()) {
             if (connectorConfig.isTls()) {
-
                 SslContextFactory sslContextFactory = new SslContextFactory();
                 sslContextFactory.setKeyStore(connectorConfig.getTlsKeystore());
                 sslContextFactory.setKeyStorePassword(connectorConfig.getTlsKeystorePassphrase());
 
                 sslContextFactory.setIncludeCipherSuites(connectorConfig.getTlsCipherSuites()
-                    .toArray(new String[connectorConfig.getTlsCipherSuites().size()]));
+                        .toArray(new String[connectorConfig.getTlsCipherSuites().size()]));
                 sslContextFactory.setIncludeProtocols(
-                    connectorConfig.getTlsProtocols().toArray(new String[connectorConfig.getTlsProtocols().size()]));
+                        connectorConfig.getTlsProtocols()
+                                .toArray(new String[connectorConfig.getTlsProtocols().size()]));
 
                 ServerConnector connector = new ServerConnector(server, sslContextFactory);
                 connector.setPort(connectorConfig.getListenPort());
@@ -129,6 +129,15 @@ public class HttpServerWrapper {
 
     public void stop() throws Exception {
         server.stop();
+    }
+
+    /**
+     * Provide access to the underlying Jetty Server
+     *
+     * @return the wrapped server instance
+     */
+    public Server getServer() {
+        return server;
     }
 
     /**

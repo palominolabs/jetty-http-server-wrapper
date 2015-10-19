@@ -1,11 +1,10 @@
 package com.palominolabs.http.server;
 
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.security.KeyStore;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.newArrayList;
@@ -24,19 +23,22 @@ public final class HttpServerConnectorConfig {
     private KeyStore tlsKeystore;
     private String tlsKeystorePassphrase;
     @Nonnull
-    private List<String> tlsCipherSuites =
-        newArrayList("TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-            "TLS_RSA_WITH_AES_256_CBC_SHA",
-            "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-            "TLS_RSA_WITH_AES_128_CBC_SHA",
-            "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+    private List<String> tlsCipherSuites = newArrayList(
+            "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+            "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+            "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+            "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+            "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+            "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+            "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
             "TLS_EMPTY_RENEGOTIATION_INFO_SCSV");
 
     /**
      * SSLv2Hello in default because AWS ELB's actual requests (not health checks) arrive using SSLv2 ClientHello
      */
     @Nonnull
-    private List<String> tlsProtocols = newArrayList("SSLv2Hello", "TLSv1", "TLSv1.1", "TLSv1.2");
+    private List<String> tlsProtocols = newArrayList("SSLv2Hello", "TLSv1.2");
 
     public HttpServerConnectorConfig(@Nonnull String listenHost, int listenPort, boolean tls) {
         this.tls = tls;
@@ -113,7 +115,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
-     * @param tlsProtocols    tls protocls
+     * @param tlsProtocols tls protocls
      * @return this
      * @see HttpServerConnectorConfig#setTlsProtocols(List)
      */
@@ -124,7 +126,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
-     * @param tlsCipherSuites    tls cipher suites
+     * @param tlsCipherSuites tls cipher suites
      * @return this
      * @see HttpServerConnectorConfig#setTlsCipherSuites(List)
      */
@@ -135,7 +137,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
-     * @param tlsKeystorePassphrase    tls keystore passphrase
+     * @param tlsKeystorePassphrase tls keystore passphrase
      * @return this
      * @see HttpServerConnectorConfig#setTlsKeystorePassphrase(String)
      */
@@ -146,7 +148,7 @@ public final class HttpServerConnectorConfig {
     }
 
     /**
-     * @param tlsKeystore    tls keystore
+     * @param tlsKeystore tls keystore
      * @return this
      * @see HttpServerConnectorConfig#setTlsKeystore(KeyStore)
      */
