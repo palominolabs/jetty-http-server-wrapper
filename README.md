@@ -1,5 +1,7 @@
 This library makes it easy to set up an embedded [Jetty](http://www.eclipse.org/jetty/) server using [Guice Servlet](http://code.google.com/p/google-guice/wiki/Servlets)'s GuiceFilter.
 
+Artifacts are released in [Bintray](https://bintray.com/). For gradle, use the `jcenter()` repository. For maven, [go here](https://bintray.com/bintray/jcenter) and click "Set me up".
+
 # Example
 
 A simple HTTP server with a servlet:

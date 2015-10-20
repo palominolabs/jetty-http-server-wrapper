@@ -1,0 +1,18 @@
+- 1.1.1
+    - Update dependencies
+    - Update default cipher suites
+    - Switch to Bintray for release hosting
+    - Switch to COIL license
+- 1.1.0
+    - Add support for ServletContextListeners
+- 1.0.5
+    - Add support for serving static files
+- 1.0.4
+    - Increase method visibility for a few config methods
+- 1.0.3
+    - Default logback-access to quiet mode
+- 1.0.2
+    - Remove logback access status listener
+- 1.0.1
+    - Use Jetty 9.1
+- 1.0.0
