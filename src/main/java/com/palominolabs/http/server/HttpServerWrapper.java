@@ -45,7 +45,6 @@ public class HttpServerWrapper {
     }
 
     public void start() throws Exception {
-
         HandlerCollection handlerCollection = new HandlerCollection();
 
         // add logback-access request log
@@ -65,8 +64,11 @@ public class HttpServerWrapper {
             logHandler.setRequestLog(logbackRequestLog);
             handlerCollection.addHandler(logHandler);
         } else {
-            logger.info("No access logging configured.");
+            logger.debug("No access logging configured; default logback-access config will apply.");
         }
+
+        // apply log config
+        logbackRequestLog.start();
 
         if (!httpServerWrapperConfig.getHttpResourceHandlerConfigs().isEmpty()) {
             ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
