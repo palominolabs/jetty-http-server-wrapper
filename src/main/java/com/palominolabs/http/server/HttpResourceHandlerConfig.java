@@ -19,8 +19,6 @@ public final class HttpResourceHandlerConfig {
     private boolean directoryListing = false;
     private boolean etags = false;
     private MimeTypes mimeTypes;
-    private int minAsyncContentLength = 0;
-    private int minMemoryMappedContentLength = -1;
 
     private String stylesheetPath;
     private List<String> welcomeFiles;
@@ -46,14 +44,6 @@ public final class HttpResourceHandlerConfig {
 
     public void setMimeTypes(MimeTypes mimeTypes) {
         this.mimeTypes = mimeTypes;
-    }
-
-    public void setMinAsyncContentLength(int minAsyncContentLength) {
-        this.minAsyncContentLength = minAsyncContentLength;
-    }
-
-    public void setMinMemoryMappedContentLength(int minMemoryMappedContentLength) {
-        this.minMemoryMappedContentLength = minMemoryMappedContentLength;
     }
 
     public void setStylesheetPath(String stylesheetPath) {
@@ -93,16 +83,6 @@ public final class HttpResourceHandlerConfig {
         return this;
     }
 
-    public HttpResourceHandlerConfig withMinAsyncContentLength(int minAsyncContentLength) {
-        setMinAsyncContentLength(minAsyncContentLength);
-        return this;
-    }
-
-    public HttpResourceHandlerConfig withMinMemoryMappedContentLength(int minMemoryMappedContentLength) {
-        setMinMemoryMappedContentLength(minMemoryMappedContentLength);
-        return this;
-    }
-
     public HttpResourceHandlerConfig withStylesheetPath(String stylesheetPath) {
         setStylesheetPath(stylesheetPath);
         return this;
@@ -134,9 +114,6 @@ public final class HttpResourceHandlerConfig {
         if (mimeTypes != null) {
             rh.setMimeTypes(mimeTypes);
         }
-
-        rh.setMinAsyncContentLength(minAsyncContentLength);
-        rh.setMinMemoryMappedContentLength(minMemoryMappedContentLength);
 
         if (stylesheetPath != null) {
             rh.setStylesheet(stylesheetPath);

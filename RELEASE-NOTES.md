@@ -1,4 +1,5 @@
-- Next
+- 1.2.0
+    - Remove ResourceHandler config options that aren't used in Jetty anymore
     - Update Guice, Guava, SLF4J, Jetty, Logback-access
 - 1.1.2
     - Update SLF4J, logback-access, and jetty dependencies
