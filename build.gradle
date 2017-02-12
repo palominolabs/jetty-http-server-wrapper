@@ -14,7 +14,6 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
 group = 'com.palominolabs.http'
-version = '1.2.0-SNAPSHOT'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -85,6 +84,10 @@ publishing {
   }
 }
 
+release {
+  tagTemplate = 'v$version'
+}
+
 bintray {
   user = rootProject.hasProperty('bintrayUser') ? rootProject.property('bintrayUser') : 'FIXME'
   key = rootProject.hasProperty('bintrayApiKey') ? rootProject.property('bintrayApiKey') : 'FIXME'
@@ -97,7 +100,7 @@ bintray {
     name = 'com.palominolabs.http:jetty-http-server-wrapper'
 
     version {
-      name = project.version
+      name = rootProject.property('version')
       released = new Date()
       if (project.isReleaseVersion) {
         vcsTag = 'v' + project.version
