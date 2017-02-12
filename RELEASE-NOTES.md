@@ -1,3 +1,8 @@
+- Next
+    - Update Guice, Guava, SLF4J, Jetty, Logback-access
+- 1.1.2
+    - Update SLF4J, logback-access, and jetty dependencies
+    - Fix initialization of logback access
 - 1.1.1
     - Update dependencies
     - Update default cipher suites

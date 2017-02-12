@@ -19,14 +19,14 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 
 ext {
   depVersions = [
-      slf4j: '1.7.21',
-      guice: '4.0'
+      slf4j: '1.7.22',
+      guice: '4.1.0'
   ]
 }
 
 dependencies {
   compile 'com.google.code.findbugs:jsr305:3.0.1'
-  compile 'com.google.guava:guava:19.0'
+  compile 'com.google.guava:guava:21.0'
 
   compile "org.slf4j:slf4j-api:$depVersions.slf4j"
   testRuntime "org.slf4j:slf4j-simple:$depVersions.slf4j"
@@ -34,11 +34,11 @@ dependencies {
   testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
   testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
 
-  compile 'org.eclipse.jetty:jetty-servlet:9.3.10.v20160621'
+  compile 'org.eclipse.jetty:jetty-servlet:9.4.1.v20170120'
 
   compile "com.google.inject.extensions:guice-servlet:$depVersions.guice"
   compile "com.google.inject.extensions:guice-assistedinject:$depVersions.guice"
-  compile 'ch.qos.logback:logback-access:1.1.7'
+  compile 'ch.qos.logback:logback-access:1.2.1'
 
   testCompile 'com.palominolabs.config:config-inject:1.0.1'
 
@@ -102,8 +102,4 @@ bintray {
       }
     }
   }
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.14'
 }
