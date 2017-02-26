@@ -20,14 +20,13 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 
 ext {
   depVersions = [
-      slf4j: '1.7.22',
+      slf4j: '1.7.24',
       guice: '4.1.0'
   ]
 }
 
 dependencies {
   compile 'com.google.code.findbugs:jsr305:3.0.1'
-  compile 'com.google.guava:guava:21.0'
 
   compile "org.slf4j:slf4j-api:$depVersions.slf4j"
   testRuntime "org.slf4j:slf4j-simple:$depVersions.slf4j"
@@ -40,8 +39,6 @@ dependencies {
   compile "com.google.inject.extensions:guice-servlet:$depVersions.guice"
   compile "com.google.inject.extensions:guice-assistedinject:$depVersions.guice"
   compile 'ch.qos.logback:logback-access:1.2.1'
-
-  testCompile 'com.palominolabs.config:config-inject:1.0.1'
 
   testCompile 'org.apache.httpcomponents:httpclient:4.3.3'
   testCompile 'org.easymock:easymock:3.3'

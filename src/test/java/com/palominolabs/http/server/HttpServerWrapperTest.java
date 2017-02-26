@@ -9,7 +9,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.ServletModule;
-import com.palominolabs.config.ConfigModuleBuilder;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -188,7 +187,6 @@ public final class HttpServerWrapperTest {
             @Override
             protected void configure() {
                 binder().requireExplicitBindings();
-                install(new ConfigModuleBuilder().build());
                 install(new HttpServerWrapperModule());
                 install(new ServletModule() {
                     @Override

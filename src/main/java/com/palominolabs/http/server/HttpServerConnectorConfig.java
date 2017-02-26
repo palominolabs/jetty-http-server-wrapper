@@ -1,13 +1,11 @@
 package com.palominolabs.http.server;
 
 import java.security.KeyStore;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Config for an individual connector that will be used in a {@link HttpServerWrapper}. Defaults, where provided, are
@@ -23,7 +21,7 @@ public final class HttpServerConnectorConfig {
     private KeyStore tlsKeystore;
     private String tlsKeystorePassphrase;
     @Nonnull
-    private List<String> tlsCipherSuites = newArrayList(
+    private List<String> tlsCipherSuites = Arrays.asList(
             "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
             "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
             "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
@@ -38,12 +36,12 @@ public final class HttpServerConnectorConfig {
      * SSLv2Hello in default because AWS ELB's actual requests (not health checks) arrive using SSLv2 ClientHello
      */
     @Nonnull
-    private List<String> tlsProtocols = newArrayList("SSLv2Hello", "TLSv1.2");
+    private List<String> tlsProtocols = Arrays.asList("SSLv2Hello", "TLSv1.2");
 
     public HttpServerConnectorConfig(@Nonnull String listenHost, int listenPort, boolean tls) {
         this.tls = tls;
         this.listenPort = listenPort;
-        this.listenHost = checkNotNull(listenHost);
+        this.listenHost = notNull(listenHost);
     }
 
     public static HttpServerConnectorConfig forHttp(@Nonnull String host, int port) {
@@ -77,7 +75,7 @@ public final class HttpServerConnectorConfig {
      */
     public void setTlsCipherSuites(@Nonnull List<String> tlsCipherSuites) {
         assertTls();
-        this.tlsCipherSuites = checkNotNull(tlsCipherSuites);
+        this.tlsCipherSuites = notNull(tlsCipherSuites);
     }
 
     @Nonnull
@@ -90,7 +88,7 @@ public final class HttpServerConnectorConfig {
      */
     public void setTlsProtocols(@Nonnull List<String> tlsProtocols) {
         assertTls();
-        this.tlsProtocols = checkNotNull(tlsProtocols);
+        this.tlsProtocols = notNull(tlsProtocols);
     }
 
     public KeyStore getTlsKeystore() {
@@ -102,7 +100,7 @@ public final class HttpServerConnectorConfig {
      */
     public void setTlsKeystore(@Nonnull KeyStore tlsKeystore) {
         assertTls();
-        this.tlsKeystore = checkNotNull(tlsKeystore);
+        this.tlsKeystore = notNull(tlsKeystore);
     }
 
     public String getTlsKeystorePassphrase() {
@@ -111,7 +109,7 @@ public final class HttpServerConnectorConfig {
 
     public void setTlsKeystorePassphrase(@Nonnull String tlsKeystorePassphrase) {
         assertTls();
-        this.tlsKeystorePassphrase = checkNotNull(tlsKeystorePassphrase);
+        this.tlsKeystorePassphrase = notNull(tlsKeystorePassphrase);
     }
 
     /**
@@ -165,5 +163,13 @@ public final class HttpServerConnectorConfig {
         if (!tls) {
             throw new IllegalStateException("Only applicable to TLS connectors");
         }
+    }
+
+    private static <T> T notNull(T t) {
+        if (t == null) {
+            throw new NullPointerException();
+        }
+
+        return t;
     }
 }
