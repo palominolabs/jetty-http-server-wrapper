@@ -7,11 +7,9 @@ buildscript {
 plugins {
   id 'com.jfrog.bintray' version '1.7.3'
   id 'net.researchgate.release' version '2.5.0'
+  id 'java'
+  id 'maven-publish'
 }
-
-apply plugin: 'java'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
 
 group = 'com.palominolabs.http'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
@@ -34,7 +32,7 @@ dependencies {
   testRuntime "org.slf4j:jcl-over-slf4j:$depVersions.slf4j"
   testCompile "org.slf4j:jul-to-slf4j:$depVersions.slf4j"
 
-  compile 'org.eclipse.jetty:jetty-servlet:9.4.1.v20170120'
+  compile 'org.eclipse.jetty:jetty-servlet:9.4.2.v20170220'
 
   compile "com.google.inject.extensions:guice-servlet:$depVersions.guice"
   compile "com.google.inject.extensions:guice-assistedinject:$depVersions.guice"
