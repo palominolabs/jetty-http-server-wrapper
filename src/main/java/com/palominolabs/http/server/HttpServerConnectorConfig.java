@@ -30,6 +30,8 @@ public final class HttpServerConnectorConfig {
             "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
             "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
             "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
+            // advertise RFC 5746 compatibility via pseudo-suite rather than TLS extension in case we encounter
+            // one of the weird TLS stacks that don't do the extension correctly
             "TLS_EMPTY_RENEGOTIATION_INFO_SCSV");
 
     /**
